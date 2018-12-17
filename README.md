@@ -2,13 +2,15 @@
 
 This gem parses MARC dates into `Time` objects.
 
-Notes:
+Formats supported by this gem were gleaned from a few 100,000 MARC records at
+one institution only. There are sure to be vast numbers of formats it can't
+parse. Nevertheless, the error rate on this data set is less than 1%.
 
-* MARC dates may contain a lot of information about ambiguities. This is all
-  lost during parsing, and any missing information is treated as zero.
-* The formats supported by this gem were gleaned from a few 100,000 MARC
-  records at one institution only, and there are sure to be vast numbers of
-  dates it can't parse.
+Development is governed by a Pareto distribution whereby 1% of formats will
+consume 99% of development effort.
+
+MARC dates contain a lot of information about ambiguities. This is all lost
+during parsing, and any missing information is treated as zero.
 
 ## Installation
 
@@ -40,6 +42,18 @@ Or install it yourself as:
 
 > Marc::Dates::parse('MDCCCCXXIII')
  => [1923-01-01 00:00:00 -0600]
+```
+
+### Error handling
+
+```ruby
+begin
+  Marc::Dates::parse('[1923?]')
+rescue Marc::Dates::FormatError
+  # The date could not be parsed. 
+rescue ArgumentError
+  # This indicates a bug in the library.
+end
 ```
 
 ## Development
