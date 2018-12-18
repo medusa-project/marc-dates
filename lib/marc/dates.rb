@@ -40,12 +40,25 @@ module Marc
       # Remove brackets
       date.gsub!(/[\[\]()<>]/, '')
 
-      # Remove "ca." and "pref."
-      date.gsub!(/(ca.|pref.)/, '')
+      # Remove various words
+      date.gsub!(/(approximately|ca.|cop.|etc.|intro.|pref.|année)/i, '')
+
+      # Remove various patterns
+      date.gsub!(/(Guangxu ?\d+|Heisei ?\d+|Meiji ?\d+|Minguo ?\d+|Min guo ?\d+|Qing guangxu ?\d+|Shōwa ?\d+|Taisho ?\d+|Taishō ?\d+) ?/i, '')
 
       # Remove everything after "or", or "v."
       i = date.index(/(or|v.)/)
       date = date[0..(i - 1)].strip if i and i > 1
+
+      # Replace "YYYY/YYYY" with "YYYY-YYYY"
+      if date.match?(/^\d{3,4}\/\d{3,4}$/)
+        date.gsub!('/', '-')
+      end
+
+      # Replace "YYYY/" and "/YYYY" with "YYYY"
+      if date.match?(/^\d{3,4}\/$/) or date.match?(/^\/\d{3,4}$/)
+        date.gsub!('/', '')
+      end
 
       # Replace "between YYYY and YYYY" with "YYYY-YYYY"
       if date.match?(/between.*and/i)
@@ -93,6 +106,9 @@ module Marc
       m = date.match(/\d{3,4}-\d{3,4}/)
       date = "#{m}" if m
 
+      # Replace lYYY with YYYY.
+      date.gsub!(/l(\d{3})/, '1\1')
+
       # Replace some DD-MM-YYYY with YYYY-MM-DD
       date.gsub!(/([2-3][0-9])-([0-1][0-9])-(\d{4})/, '\3-\2-\1')
 
@@ -106,8 +122,10 @@ module Marc
       date.gsub!(/^(\d{1,2})-(\d{4})/, '\2-\1')
 
       # Replace NN-NN-NN with NN:NN:NN and NN-NN with NN:NN so that the dashes
-      # won't get confused for ranges
-      unless date.match(/\d{4}-\d{4}/)
+      # won't get mistaken for ranges
+      unless date.match(/\d{4}-\d{4}/) or
+          date.match(/\d{4}:\d{1,2}-\d{4}:\d{1,2}/) or
+          date.match(/\d{4}:\d{1,2}:\d{1,2}-\d{4}:\d{1,2}:\d{1,2}/)
         date.gsub!(/(\d)-(\d)-(\d)/, '\1:\2:\3')
         date.gsub!(/(\d)-(\d)/, '\1:\2')
       end

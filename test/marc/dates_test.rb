@@ -40,28 +40,32 @@ require "test_helper"
 #
 # Range format tests:
 #
-# | ID | Format                        |
-# |----|-------------------------------|
-# | NA | YYYY-                         |
-# | NB | YYYY-YYYY                     |
-# | NC | YYYY-, cYYYY                  |
-# | ND | YYY-]                         |
-# | NE | [YYYY-YY]                     |
-# | NF | [between YYYY and YYYY]       |
-# | NG | [YYYY]-<YYYY >                |
-# | NH | [cYYYY-YYYY]                  |
-# | NI | cYYYY-YYYY                    |
-# | NJ | cYYYY-                        |
-# | NK | YYYY/YYYY-                    |
-# | NL | YYYY/YY-                      |
-# | NM | cYYYY-cYYYY                   |
-# | NN | [cYYYY]-YYYY                  |
-# | NO | [YYYY/YYYY-YYYY/YYYY          |
-# | NP | YYYY/YYYY-YYYY/YY             |
-# | NQ | [YYY-?]-                      |
-# | NR | YYYY-YY [v. N YYYY]           |
-# | NS | YYYY-YY                       |
-# | NT | Sho  wa 41-43 i.e. 1966-1968] |
+# | ID | Format                              |
+# |----|-------------------------------------|
+# | NA | YYYY-                               |
+# | NB | YYYY-YYYY                           |
+# | NC | YYYY-, cYYYY                        |
+# | ND | YYY-]                               |
+# | NE | [YYYY-YY]                           |
+# | NF | [between YYYY and YYYY]             |
+# | NG | [YYYY]-<YYYY >                      |
+# | NH | [cYYYY-YYYY]                        |
+# | NI | cYYYY-YYYY                          |
+# | NJ | cYYYY-                              |
+# | NK | YYYY/YYYY-                          |
+# | NL | YYYY/YY-                            |
+# | NM | cYYYY-cYYYY                         |
+# | NN | [cYYYY]-YYYY                        |
+# | NO | [YYYY/YYYY-YYYY/YYYY                |
+# | NP | YYYY/YYYY-YYYY/YY                   |
+# | NQ | [YYY-?]-                            |
+# | NR | YYYY-YY [v. N YYYY]                 |
+# | NS | YYYY-YY                             |
+# | NT | Sho  wa 41-43 i.e. 1966-1968]       |
+# | NU | YYYY/YYYY                           |
+# | NV | YYYY/                               |
+# | NW | /YYYY                               |
+# | NX | [between Month YYYY and Month YYYY] |
 #
 class Marc::DatesTest < Minitest::Test
 
@@ -394,6 +398,28 @@ class Marc::DatesTest < Minitest::Test
     assert_equal [Time.parse('1966-01-01 00:00:00'),
                   Time.parse('1968-01-01 00:00:00')],
                  Marc::Dates.parse('Sho  wa 41-43 i.e. 1966-1968]')
+  end
+
+  def test_parse_with_NU
+    assert_equal [Time.parse('1952-01-01 00:00:00'),
+                  Time.parse('1958-01-01 00:00:00')],
+                 Marc::Dates.parse('1952/1958')
+  end
+
+  def test_parse_with_NV
+    assert_equal [Time.parse('1952-01-01 00:00:00')],
+                 Marc::Dates.parse('1952/')
+  end
+
+  def test_parse_with_NW
+    assert_equal [Time.parse('1952-01-01 00:00:00')],
+                 Marc::Dates.parse('/1952')
+  end
+
+  def test_parse_with_NX
+    assert_equal [Time.parse('1956-03-01 00:00:00'),
+                  Time.parse('1962-02-01 00:00:00')],
+                 Marc::Dates.parse('[between March 1956 and February 1962]')
   end
 
 end
