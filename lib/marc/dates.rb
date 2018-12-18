@@ -46,8 +46,8 @@ module Marc
       # Remove various patterns
       date.gsub!(/(Guangxu ?\d+|Heisei ?\d+|Meiji ?\d+|Minguo ?\d+|Min guo ?\d+|Qing guangxu ?\d+|Shōwa ?\d+|Taisho ?\d+|Taishō ?\d+) ?/i, '')
 
-      # Remove everything after "or", or "v."
-      i = date.index(/(or|v.)/)
+      # Remove everything after " or", or " v."
+      i = date.index(/( or| v.)/)
       date = date[0..(i - 1)].strip if i and i > 1
 
       # Replace "YYYY/YYYY" with "YYYY-YYYY"

@@ -417,9 +417,9 @@ class Marc::DatesTest < Minitest::Test
   end
 
   def test_parse_with_NX
-    assert_equal [Time.parse('1956-03-01 00:00:00'),
-                  Time.parse('1962-02-01 00:00:00')],
-                 Marc::Dates.parse('[between March 1956 and February 1962]')
+    assert_equal [Time.parse('1917-06-01 00:00:00'),
+                  Time.parse('1918-11-01 00:00:00')],
+                 Marc::Dates.parse('[between June 1917 and November 1918]')
   end
 
 end
